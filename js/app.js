@@ -10,9 +10,9 @@ firebase.initializeApp({
   
   
   // Initialize Cloud Firestore through Firebase
-  var db = firebase.firestore();
-  
-  
+  var db = firebase.firestore();  
+
+
 
   //Guardar
 
@@ -150,8 +150,8 @@ function verificarUsuario(){
         guardarOpinion();
     }
 }
-
-var tabla = document.getElementById('tabla');
+function listarEncuesta(){
+ var tabla = document.getElementById('tabla');
     db.collection("opinion").onSnapshot((querySnapshot) => {
         tabla.innerHTML = "";
         querySnapshot.forEach((doc) => {
@@ -164,7 +164,9 @@ var tabla = document.getElementById('tabla');
             </tr>`
             
         });
-});
+    });
+}
+
 
 function cerrarSesion(){
     window.location = "index.html";
@@ -185,6 +187,7 @@ function inicio(){
     $("#criterio").removeClass("active");
     $("#bar").removeClass("active");
     $("#encuesta").removeClass("active");
+    $("#administrador").removeClass("active");
 }
 
 function criterio(){
@@ -200,6 +203,7 @@ function criterio(){
     $("#criterio").addClass("active");
     $("#bar").removeClass("active");
     $("#encuesta").removeClass("active");
+    $("#administrador").removeClass("active");
 }
 
 function bares(){
@@ -215,6 +219,7 @@ function bares(){
     $("#criterio").removeClass("active");
     $("#bar").addClass("active");
     $("#encuesta").removeClass("active");
+    $("#administrador").removeClass("active");
 }
 
 function encuesta(){
@@ -230,6 +235,7 @@ function encuesta(){
     $("#criterio").removeClass("active");
     $("#bar").removeClass("active");
     $("#encuesta").addClass("active");
+    $("#administrador").removeClass("active");
 }
 
 function login(){
@@ -264,6 +270,13 @@ function administrador(){
     document.getElementById('editarUsuario').style.display = "none"
     listaUsurio();
     listarBar();
+    listarEncuestaAdmi();
+
+    $("#inicio").removeClass("active");
+    $("#criterio").removeClass("active");
+    $("#bar").removeClass("active");
+    $("#encuesta").removeClass("active");
+    $("#administrador").addClass("active");
 }
 
 function cargar(){
@@ -271,6 +284,7 @@ function cargar(){
    inicio();
    listarTarjetaBar();
    listarTarjetaBarInicio();
+   listarEncuesta();
 }
 
 function validarSesion(){
@@ -286,15 +300,14 @@ function validarSesion(){
 }
 
 
-//********* resfrescar */
-function editarUsuario(){
-    document.getElementById('editarUsuario').style.display = "block"
-} 
+//********* Usuario */
 function listaUsurio(){
     var tabla = document.getElementById('tablaUsuario');
         db.collection("users").onSnapshot((querySnapshot) => {
             tabla.innerHTML = "";
             querySnapshot.forEach((doc) => {
+
+                var key = doc.id;
 
                 tabla.innerHTML += `
                 <tr>
@@ -303,14 +316,58 @@ function listaUsurio(){
                     <td>${doc.data().email}</td>
                     <td>${doc.data().tipo}</td>
                     <td>
-                    <button type="button" class="badge badge-primary" onClick="editarUsuario()">Editar</button>
-                    <button type="button" class="badge badge-danger" onClick="()">Eliminar</button>
+                    <button class="badge badge-primary" onClick="editarUsuario('${key}','${doc.data().nombre}','${doc.data().apellido}','${doc.data().email}','${doc.data().tipo}')">Editar</button>
+                    <button class="badge badge-danger" onClick="eliminarUsuario('${key}')">Eliminar</button>
                     </td>
                 </tr>`
                 
             });
     });
 }
+function eliminarUsuario(id){
+    db.collection("users").doc(id).delete().then(function() {
+        console.log("Document successfully deleted!");
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+}
+function editarUsuario(id,nombre,apellido,email,tipo){
+    document.getElementById('editarUsuario').style.display = "block"
+    document.getElementById('nombreUsuario').value = nombre;
+    document.getElementById('apellidoUsuario').value = apellido;
+    document.getElementById('corrreoUsuario').value = email;
+    document.getElementById('tipoUsuario1').value = tipo;
+
+    var botonActualizar = document.getElementById('botonActualizar');
+
+    botonActualizar.onclick = function(){
+        var washingtonRef = db.collection("users").doc(id);
+        var nombre = document.getElementById('nombreUsuario').value;
+        var apellido = document.getElementById('apellidoUsuario').value;
+        var email = document.getElementById('corrreoUsuario').value;
+        var tipo = document.getElementById('tipoUsuario1').value;
+
+        // Set the "capital" field of the city 'DC'
+        return washingtonRef.update({
+            nombre: nombre,
+            apellido: apellido,
+            email: email,
+            tipo: tipo
+        })
+        .then(function() {
+            console.log("Document successfully updated!");
+            document.getElementById('editarUsuario').style.display = "none"
+            document.getElementById('nombreUsuario').value = "";
+            document.getElementById('apellidoUsuario').value = "";
+            document.getElementById('corrreoUsuario').value = "";
+            document.getElementById('tipoUsuario1').value = "";
+        })
+        .catch(function(error) {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+        });
+    }
+} 
 
 function guardarAdmi(){
     var nombre = document.getElementById('nombreAdmi').value;
@@ -340,6 +397,34 @@ function guardarAdmi(){
     });
 }
 
+function listarEncuestaAdmi(){
+    var tabla = document.getElementById('tablaCriterio');
+       db.collection("opinion").onSnapshot((querySnapshot) => {
+           tabla.innerHTML = "";
+           querySnapshot.forEach((doc) => {
+               tabla.innerHTML += `
+               <tr>
+                   <td>${doc.data().restaurante}</td>
+                   <td>${doc.data().promedio}</td>
+                   <td>${doc.data().pComentario}</td>
+                   <td>${doc.data().user}</td>
+                   <td>
+                    <button class="badge badge-danger" onClick="eliminarCriterio('${doc.id}')">Eliminar</button>
+                    </td>
+               </tr>`
+               
+           });
+       });
+   }
+
+   function eliminarCriterio(llave){
+    db.collection("opinion").doc(llave).delete().then(function() {
+        console.log("Document successfully deleted!");
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+}
+
 // AGREGAR BAR 
 
 function aggBar(){
@@ -355,19 +440,27 @@ function listarBar(){
     db.collection("bar").onSnapshot((querySnapshot) => {
         tabla.innerHTML = "";
         querySnapshot.forEach((doc) => {
-
             tabla.innerHTML += `
             <tr>
                 <td>${doc.data().nombreFoto}</td>
                 <td>${doc.data().nombreBar}</td>
                 <td>${doc.data().descripcion}</td>
                 <td>
-                <button type="button" class="badge badge-primary" onclick="()">Editar</button>
-                <button type="button" class="badge badge-danger" onclick="()">Eliminar</button>
+                <button class="badge badge-primary" onclick="">Editar
+                </button>
+                <button class="badge badge-danger" onclick="eliminarBares('${doc.id}')">Eliminar
+                </button>
                 </td>
-            </tr>`
-            
+            </tr>`      
         });
+
+    });
+}
+function eliminarBares(llave){
+    db.collection("bar").doc(llave).delete().then(function() {
+        console.log("Document successfully deleted!");
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
     });
 }
 
@@ -446,11 +539,12 @@ function listarTarjetaBarInicio(){
                         <img class="card-img-top" src="${doc.data().url}" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">${doc.data().nombreBar}</h5>
-                            <a class="btn btn-primary" onClick="validarSesion()">Encuesta</a>
+                            <a class="btn btn-primary" onclick="validarSesion()">Encuesta</a>
                         </div>
                     </div>
                 </div>`        
             }); 
     });
 }
+
 
