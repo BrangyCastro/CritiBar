@@ -15,9 +15,9 @@
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-firestore.js"></script>
 
-  </head>
-  <body onload="cargar()">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+</head>
+<body onload="cargar()">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" >CritiBar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -48,9 +48,9 @@
             <a class="btn btn-link nav-link" id="registrar" data-toggle="modal" data-target="#modalRegistro">Registrarse</a>
           </form>         
         </div>
-      </nav>
+</nav>
 
-      <div class="container" id="contenedorInicio">
+<div class="container" id="contenedorInicio">
                 <br>
       
               <div class="col-md-12">
@@ -138,10 +138,10 @@
       
       </div>
       <br><br>
-      </div>
-      <!--    aqui empieza la pagina de Bar -->
+</div>
+<!--    aqui empieza la pagina de Bar -->
       
-      <div class="container" id="contenedorBar">
+<div class="container" id="contenedorBar">
               <br>
               <div class="row">
                       <div class="card-columns" id="tablaTarjetaBar">
@@ -149,11 +149,11 @@
                        </div>
               </div>
               <br><br>
-      </div>
+</div>
       
-      <!--    aqui empieza la pagina de Encuesta -->
+<!--    aqui empieza la pagina de Encuesta -->
       
-      <div class="container" id="contenedorEncuesta">
+<div class="container" id="contenedorEncuesta">
           <br>
               <div class="row">
                   <div class="col-1">
@@ -248,14 +248,19 @@
                   <div class="col-5">
                       <h1>Forma de calificar</h1>
                       <h5>Por cada pregunta que esta formula tendra un valor minimo de 1 y un valor maximo de 5.</h5>
+                      <h5>1 Muy malo</h5>
+                      <h5>2 Malo</h5>
+                      <h5>3 Regular</h5>
+                      <h5>4 Bueno</h5>
+                      <h5>5 Muy bueno</h5>
                   </div>
               </div>
               <br><br>
-      </div>
+</div>
       
-      <!--    aqui empieza la pagina de Criterio -->
+<!--    aqui empieza la pagina de Criterio -->
       
-      <div class="container" id="contenedorCriterio">
+<div class="container" id="contenedorCriterio">
               <div class="row">
                       <div class="col">
                         
@@ -284,11 +289,11 @@
                       </div>
                     </div>
                     <br><br>
-      </div>
+</div>
       
-      <!--    aqui empieza la pagina de Login -->      
-            <!-- Modal -->
-            <div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--    aqui empieza la pagina de Login -->      
+ <!-- Modal -->
+<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -309,11 +314,12 @@
                   </div>
                 </div>
               </div>
-            </div>
+</div>
       
-       <!--    aqui empieza la pagina de Recuperar Pass -->      
-            <!-- Modal -->
-            <div class="modal fade" id="modalRecuperarPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--    aqui empieza la pagina de Recuperar Pass -->      
+<!-- Modal -->
+
+<div class="modal fade" id="modalRecuperarPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -332,10 +338,12 @@
                       </div>
                     </div>
                   </div>
-                </div>     
-       <!--    aqui empieza la pagina de mensaje de correo -->      
-       <!-- Small modal -->
-              <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="modalMensajePass">
+</div>   
+
+<!--    aqui empieza la pagina de mensaje de correo -->      
+<!-- Small modal -->
+
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="modalMensajePass">
               <div class="modal-dialog modal-sm">
                   <div class="modal-content">
                           <div class="modal-header">
@@ -349,11 +357,12 @@
                           </div>
                   </div>
               </div>
-              </div>
-      <!--    aqui empieza la pagina de Registro -->
-            
-            <!-- Modal -->
-            <div class="modal fade" id="modalRegistro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>
+
+<!--    aqui empieza la pagina de Registro -->
+<!-- Modal -->
+
+<div class="modal fade" id="modalRegistro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -375,10 +384,10 @@
                   </div>
                 </div>
               </div>
-            </div>
+</div>
       
-      <!--    aqui empieza la pagina de Administrdor -->
-      
+<!--    aqui empieza la pagina de Administrdor -->
+    
 <div class="container" id="contenedorAdministrador">
                     <nav>
                           <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -467,7 +476,7 @@
                                           </div>
                                           <div class="col-1">
                                               <button class="btn btn-success my-2" id="botonBar" onclick="subirImagen()">Guardar</button>
-                                              <button class="btn btn-success my-2" id="botonBar2" onclick="editarBar()" style="display: block;">Actualizar</button>
+                                              <button class="btn btn-success my-2" id="botonBar2" onclick="editarBar()" style="display: none;">Actualizar</button>
                                             </div>
                                       </div>
                               </div>
@@ -509,9 +518,10 @@
                         </div>
                         <br><br>
 </div>
-      <!--    aqui empieza la pagina de Perfil -->
-    <!-- Modal -->
-    <div class="modal fade" id="modalPerfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<!--    aqui empieza la pagina de Perfil -->
+<!-- Modal -->
+<div class="modal fade" id="modalPerfil" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -538,8 +548,9 @@
                 </div>
               </div>
             </div>
-          </div>
-  <!--    aqui empieza la pagina de cambiar contrasena -->        
+</div>
+
+<!--    aqui empieza la pagina de cambiar contrasena -->        
 <!-- Small modal -->
 <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="modalCambiarPass">
         <div class="modal-dialog modal-sm">
@@ -564,8 +575,9 @@
                     </div>
             </div>
         </div>
-        </div>
-  <!--    aqui empieza la pagina de mensaje de confirmacion Eliminar Usuario -->        
+</div>
+
+<!--    aqui empieza la pagina de mensaje de confirmacion Eliminar Usuario -->        
 <!-- Small modal -->
 <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="modalEliminarUser">
         <div class="modal-dialog modal-sm">
@@ -585,7 +597,7 @@
                     </div>
             </div>
         </div>
-        </div>
+</div>
       
 <footer class="footer" id="footer">
         <div class="container">
@@ -603,7 +615,7 @@
                 </div>
             </div>
         </div>
- </footer>
+</footer>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
