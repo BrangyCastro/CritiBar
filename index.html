@@ -457,6 +457,7 @@
                                       <div class="row">
                                           <div class="col-4">
                                               <input type="file" name="fichero" id="fichero" class="hidden" value="">
+                                              <input type="text" id="idBar" style="display: none;">
                                           </div>
                                           <div class="col-3">
                                               <input type="text" id="nombreBar" placeholder="Ingrese nombre" class="form-control my-2">
@@ -465,8 +466,9 @@
                                               <textarea class="form-control my-2" id="descripcionBar" rows="1"></textarea>
                                           </div>
                                           <div class="col-1">
-                                              <button class="btn btn-success my-2" id="boton" onclick="subirImagen()">Guardar</button>
-                                          </div>
+                                              <button class="btn btn-success my-2" id="botonBar" onclick="subirImagen()">Guardar</button>
+                                              <button class="btn btn-success my-2" id="botonBar2" onclick="editarBar()" style="display: block;">Actualizar</button>
+                                            </div>
                                       </div>
                               </div>
                               <div class="container">

@@ -9,7 +9,80 @@ firebase.initializeApp({
 });
   var db = firebase.firestore();  
 //--------------------------------------------------------------------------
-  //Guardar
+
+/********* Vista Inicio ********/
+// Funcion caragar el ranking de los bares
+
+function tablaBarRankin(){
+    var tabla = document.getElementById('tablaRanking');
+    db.collection("opinion").orderBy("promedio", "desc").limit(5).onSnapshot((querySnapshot) => { 
+        tabla.innerHTML = "";    
+            querySnapshot.forEach((doc) => {       
+                tabla.innerHTML += `
+                <tr>
+                    <td>${doc.data().restaurante}</td>
+                    <td>${doc.data().promedio}</td>
+                </tr>
+                `        
+            }); 
+    });
+}
+/* Funcion para mostrar la tarjeta en la 
+    vita de inicio */
+
+function listarTarjetaBarInicio(){
+        var tabla = document.getElementById('tarjetasInicio');
+        db.collection("bar").orderBy("nombreBar").limit(3).onSnapshot((querySnapshot) => { 
+            tabla.innerHTML = "";    
+                querySnapshot.forEach((doc) => {       
+                    tabla.innerHTML += `
+                    <div class="col-4">
+                        <div class="card" style="width: 18rem;">
+                            <img class="card-img-top" src="${doc.data().url}" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">${doc.data().nombreBar}</h5>
+                                <a class="btn btn-primary" id="validarSesion" onclick = "validarSesionTarjetasInicio()">Encuesta</a>
+                            </div>
+                        </div>
+                    </div>`        
+                }); 
+        });
+    }
+
+/* Funcion para saber si un usuario esta login,
+    boton de la tarjetas de la vista de inicio */
+function validarSesionTarjetasInicio(){
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            encuesta();
+        } else {
+            $("#modalLogin").modal();
+        }
+      });
+}
+
+/******** Vista Bar */
+// Funcion para mostrar los Bares en tarjetas 
+function listarTarjetaBar(){
+    var tabla = document.getElementById('tablaTarjetaBar');
+    db.collection("bar").onSnapshot((querySnapshot) => {
+        tabla.innerHTML = "";
+        querySnapshot.forEach((doc) => {
+            tabla.innerHTML += `
+            <div class="card" height="300">
+                <img class="card-img-top" src="${doc.data().url}" alt="Card image cap" height="400">
+                <div class="card-body">
+                    <h5 class="card-title">${doc.data().nombreBar}</h5>
+                    <p class="card-text">${doc.data().descripcion}</p>
+                </div>
+            </div>`
+            
+        });
+    });
+}
+
+/* ****** Vista Encuesta ***********/
+
 
 function guardarUserInvitado(nombre,apellido,idAutenticacion){
     
@@ -245,7 +318,8 @@ function cerrarSesion(){
     });
 
 }
-
+/* ******* Navegabilidad  ***********
+   Funciones para cambiar de vistas */
 function inicio(){
     document.getElementById('contenedorCriterio').style.display = "none"
     document.getElementById('contenedorInicio').style.display = "block"
@@ -255,20 +329,6 @@ function inicio(){
 
     $("#inicio").addClass("active");
     $("#criterio").removeClass("active");
-    $("#bar").removeClass("active");
-    $("#encuesta").removeClass("active");
-    $("#administrador").removeClass("active");
-}
-
-function criterio(){
-    document.getElementById('contenedorCriterio').style.display = "block"
-    document.getElementById('contenedorInicio').style.display = "none"
-    document.getElementById('contenedorBar').style.display = "none"
-    document.getElementById('contenedorEncuesta').style.display = "none"
-    document.getElementById('contenedorAdministrador').style.display = "none"
-
-    $("#inicio").removeClass("active");
-    $("#criterio").addClass("active");
     $("#bar").removeClass("active");
     $("#encuesta").removeClass("active");
     $("#administrador").removeClass("active");
@@ -302,6 +362,20 @@ function encuesta(){
     $("#administrador").removeClass("active");
 }
 
+function criterio(){
+    document.getElementById('contenedorCriterio').style.display = "block"
+    document.getElementById('contenedorInicio').style.display = "none"
+    document.getElementById('contenedorBar').style.display = "none"
+    document.getElementById('contenedorEncuesta').style.display = "none"
+    document.getElementById('contenedorAdministrador').style.display = "none"
+
+    $("#inicio").removeClass("active");
+    $("#criterio").addClass("active");
+    $("#bar").removeClass("active");
+    $("#encuesta").removeClass("active");
+    $("#administrador").removeClass("active");
+}
+
 function administrador(){
     document.getElementById('contenedorCriterio').style.display = "none"
     document.getElementById('contenedorInicio').style.display = "none"
@@ -320,22 +394,12 @@ function administrador(){
     $("#encuesta").removeClass("active");
     $("#administrador").addClass("active");
 }
-
+//**********************************************
 function cargar(){
    inicio();
    listarTarjetaBar();
    listarTarjetaBarInicio();
    listarEncuesta();
-}
-
-function validarSesionTarjetasInicio(){
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            encuesta();
-        } else {
-            $("#modalLogin").modal();
-        }
-      });
 }
 
 //********* Usuario */
@@ -495,6 +559,48 @@ function aggBar(){
     $("#aggBar").toggle();
 }
 
+function mostrarEditarBar(id){
+    $("#fichero").css("display","none");
+    $("#aggBar").toggle();
+    $("#botonBar").css("display","none");
+    $("#botonBar2").css("display","block");
+    db.collection("bar").onSnapshot((querySnapshot) => {  
+        querySnapshot.forEach((doc) => {       
+            if(id == doc.id){  
+                $("#idBar").val(doc.id);          
+                $("#nombreBar").val(doc.data().nombreBar);
+                $("#descripcionBar").val(doc.data().descripcion);
+            }    
+        }); 
+    });
+}
+
+function editarBar(){
+    var nombreBar = $("#nombreBar").val();
+    var descripcionBar = $("#descripcionBar").val();
+    var id = $("#idBar").val();
+    var washingtonRef = db.collection("bar").doc(id);
+
+        return washingtonRef.update({
+            nombreBar: nombreBar,
+            descripcion: descripcionBar
+        })
+        .then(function() {
+            console.log("Document successfully updated!");
+            $("#fichero").css("display","block");
+            $("#aggBar").toggle();
+            $("#nombreBar").val("");
+            $("#descripcionBar").val("");
+            $("#botonBar").css("display","block");
+            $("#botonBar2").css("display","none");
+        })
+        .catch(function(error) {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+        });
+
+}
+
 function listarBar(){
     var tabla = document.getElementById('tablaBar');
     db.collection("bar").onSnapshot((querySnapshot) => {
@@ -506,7 +612,7 @@ function listarBar(){
                 <td>${doc.data().nombreBar}</td>
                 <td>${doc.data().descripcion}</td>
                 <td>
-                <button class="badge badge-primary" onclick="">Editar
+                <button class="badge badge-primary" onclick="mostrarEditarBar('${doc.id}')">Editar
                 </button>
                 <button class="badge badge-danger" onclick="eliminarBares('${doc.id}')">Eliminar
                 </button>
@@ -525,23 +631,7 @@ function eliminarBares(id){
     });
 }
 
-function listarTarjetaBar(){
-    var tabla = document.getElementById('tablaTarjetaBar');
-    db.collection("bar").onSnapshot((querySnapshot) => {
-        tabla.innerHTML = "";
-        querySnapshot.forEach((doc) => {
-            tabla.innerHTML += `
-            <div class="card" height="300">
-                <img class="card-img-top" src="${doc.data().url}" alt="Card image cap" height="400">
-                <div class="card-body">
-                    <h5 class="card-title">${doc.data().nombreBar}</h5>
-                    <p class="card-text">${doc.data().descripcion}</p>
-                </div>
-            </div>`
-            
-        });
-    });
-}
+
 
 function subirImagen(){
     var nombreBar = document.getElementById('nombreBar').value;
@@ -589,39 +679,6 @@ function guardarBar(nombreFoto, url, nombreBar, descripcion){
     });
 }
 
-function listarTarjetaBarInicio(){
-    var tabla = document.getElementById('tarjetasInicio');
-    db.collection("bar").orderBy("nombreBar").limit(3).onSnapshot((querySnapshot) => { 
-        tabla.innerHTML = "";    
-            querySnapshot.forEach((doc) => {       
-                tabla.innerHTML += `
-                <div class="col-4">
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" src="${doc.data().url}" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">${doc.data().nombreBar}</h5>
-                            <a class="btn btn-primary" id="validarSesion" onclick = "validarSesionTarjetasInicio()">Encuesta</a>
-                        </div>
-                    </div>
-                </div>`        
-            }); 
-    });
-}
-
-function tablaBarRankin(){
-    var tabla = document.getElementById('tablaRanking');
-    db.collection("opinion").orderBy("promedio", "desc").limit(5).onSnapshot((querySnapshot) => { 
-        tabla.innerHTML = "";    
-            querySnapshot.forEach((doc) => {       
-                tabla.innerHTML += `
-                <tr>
-                    <td>${doc.data().restaurante}</td>
-                    <td>${doc.data().promedio}</td>
-                </tr>
-                `        
-            }); 
-    });
-}
 
 
 function recuperarPassEmail(){
